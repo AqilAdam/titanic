@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titanic Survival Prediction</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=IM+Fell+English+SC&display=swap');
+
+        body {
+    font-family: 'Merriweather', serif;
+    background: url('{{ url_for("static", filename="titanic.webp") }}') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: auto;
+}
+
+.container {
+    background: rgba(0, 0, 0, 0.85);
+    color: #e0e0e0;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+    max-width: 420px;
+    text-align: center;
+}
+
+h1 {
+    font-family: 'Merriweather', serif;
+    font-size: 36px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 3px 3px 10px rgba(139, 0, 0, 0.8), 
+                 0 0 15px rgba(139, 0, 0, 0.6), 
+                 -3px -3px 5px rgba(139, 0, 0, 0.4); /* Multi-layered dark red shadow */
+    color: hsl(32, 81%, 48%); /* Original yellow color */
+    border-bottom: 2px solid #8b0000; /* Dark red border */
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+label {
+    font-family: 'Merriweather', serif;
+    font-size: 18px;
+    color: hsl(32, 81%, 48%); /* Original yellow color */
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 6px rgba(139, 0, 0, 0.7); /* Subtle dark red glow */
+    display: block;
+    margin-bottom: 5px;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #8b0000; /* Dark red border */
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: rgba(50, 50, 50, 0.9); /* Darker background */
+    color: #e0e0e0; /* Light gray for readability */
+    margin-bottom: 15px;
+    outline: none;
+    box-shadow: 0 0 12px rgba(139, 0, 0, 0.8); /* Dark red glow */
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    background-color: rgba(70, 70, 70, 0.9);
+    box-shadow: 0 0 15px rgba(139, 0, 0, 1); /* Intensified red glow on focus */
+    transform: scale(1.02); /* Slight scaling for interaction */
+}
+
+input[type="submit"] {
+    background: linear-gradient(to right, #8b0000, #5c0000);
+    color: #ffffff; /* White text for contrast */
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid #8b0000;
+    border-radius: 5px;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8); /* Shadow for dramatic effect */
+    box-shadow: 0 0 10px rgba(139, 0, 0, 0.8); /* Red glow for the button */
+}
+
+input[type="submit"]:hover {
+    background: linear-gradient(to right, #5c0000, #3d0000);
+    box-shadow: 0 0 20px rgba(139, 0, 0, 1); /* Brighter red glow */
+    transform: scale(1.05);
+}
+
+.result {
+    font-family: 'Merriweather', serif;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.85);
+    color: hsl(32, 81%, 48%);; /* Original yellow color */
+    border: 2px solid #8b0000; /* Dark red border */
+    text-shadow: 2px 2px 8px rgba(139, 0, 0, 0.8); /* Dark red shadow for ominous feel */
+    margin-top: 20px;
+}
+
+footer {
+    font-family: 'Merriweather', serif;
+    font-size: 16px;
+    color: hsl(32, 81%, 48%);; /* Original yellow color */
+    text-shadow: 2px 2px 6px rgba(139, 0, 0, 0.7); /* Dark red shadow */
+    text-align: center;
+    margin-top: 30px;
+}
+
+
+
+
+        img {
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Titanic Survival Prediction</h1>
+        <form action="/" method="post">
+            <label for="pclass">Pclass:</label>
+            <input type="number" id="pclass" name="pclass" required min="1" max="3" placeholder="Enter class (1-3)">
+
+            <label for="age">Age:</label>
+            <input type="number" step="any" id="age" name="age" required min="0" placeholder="Enter age">
+
+            <label for="sbsp">SibSp (Siblings/Spouses Aboard):</label>
+            <input type="number" id="sbsp" name="sbsp" required min="0" placeholder="Number of siblings/spouses">
+
+            <label for="parch">Parch (Parents/Children Aboard):</label>
+            <input type="number" id="parch" name="parch" required min="0" placeholder="Number of parents/children">
+
+            <label for="fare">Fare:</label>
+            <input type="number" step="any" id="fare" name="fare" required min="0" placeholder="Enter fare amount">
+
+            <label for="sex">Sex:</label>
+            <select id="sex" name="sex" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+
+            <label for="port">Embarked:</label>
+            <select id="port" name="port" required>
+                <option value="C">Cherbourg</option>
+                <option value="Q">Queenstown</option>
+                <option value="S">Southampton</option>
+            </select>
+
+            <input type="submit" value="Predict">
+        </form>
+        {% if prediction %}
+                <div class="result {% if prediction == 'Did not Survive' %}failed{% endif %}">
+                    Prediction: <span>{{ prediction }}</span>
+                </div>
+       {% endif %}
+        <script>
+            var prediction = "{{ prediction }}";
+            if (prediction === "Survived") {
+                document.getElementById("survivalGif").style.display = "block";
+                document.getElementById("survivalSound").play();
+            } else if (prediction === "Did not Survive") {
+                document.getElementById("notSurvivalGif").style.display = "block";
+                document.getElementById("notSurvivalSound").play();
+            }
+        </script>
+
+        <footer>Made with ❤ by Titanic ML Team</footer>
+    </div>
+</body>
+
+</html>
